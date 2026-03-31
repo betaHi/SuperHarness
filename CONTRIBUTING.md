@@ -4,17 +4,17 @@ Thanks for your interest in contributing! Here's how to get started.
 
 ## Areas of Contribution
 
-### 🔥 High Priority
+### High Priority
 - **Real-world testing** — Run Super Harness on actual projects and report results
 - **Evaluator tuning** — Improve review prompts for stricter, more useful feedback
 - **Edge case handling** — Git conflicts, timeout recovery, partial completions
 
-### 🟡 Medium Priority
+### Medium Priority
 - **New coding agent integrations** — Beyond Claude Code and Codex
 - **Sprint decomposition heuristics** — Better complexity assessment
 - **Cost tracking** — Token usage reporting per phase
 
-### 🟢 Nice to Have
+### Nice to Have
 - **Documentation improvements** — Examples, tutorials, case studies
 - **Visualization** — Pipeline progress visualization
 - **Benchmarks** — Comparing solo vs harness outcomes across task types

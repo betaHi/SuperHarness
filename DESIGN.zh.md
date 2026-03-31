@@ -1,4 +1,4 @@
-# 🔱 Super Harness — 设计文档
+# Super Harness — 设计文档
 
 ## 为什么做 Super Harness？
 
@@ -24,32 +24,31 @@
 
 ```
 User: "Build X"
-     │
-     ▼
+ │
+ ▼
 ┌─────────────────────┐
-│ Phase 1: Parse      │ ← 解析任务，判断复杂度
-│ Phase 2: Setup      │ ← 创建 .harness/handoff/ 工作空间
+│ Phase 1: Parse │ ← 解析任务，判断复杂度
+│ Phase 2: Setup │ ← 创建 .harness/handoff/ 工作空间
 └─────────┬───────────┘
-          ▼
+ ▼
 ┌─────────────────────┐
-│ Phase 3: Planner    │ ← 扩展任务为 Spec（复杂任务）
-│ 📋 spec.md          │   跳过（简单任务）
+│ Phase 3: Planner │ ← 扩展任务为 Spec（复杂任务）
+│ spec.md │ 跳过（简单任务）
 └─────────┬───────────┘
-          ▼
+ ▼
 ┌─────────────────────┐
-│ Phase 4: Generator  │ ← Claude Code / Codex 写代码
-│ 🐯 implementation.md│
+│ Phase 4: Generator │ ← Claude Code / Codex 写代码
+│ implementation.md│
 └─────────┬───────────┘
-          ▼
+ ▼
 ┌─────────────────────┐
-│ Phase 5: Evaluator  │ ← 独立 Review，严格评判
-│ 🔱 review.md        │
+│ Phase 5: Evaluator │ ← 独立 Review，严格评判
+│ review.md │
 └─────────┬───────────┘
-          │
-     PASS?├── YES → Phase 6: Report ✅
-          │
-          └── NO → 回到 Generator 修复
-                   （最多 2 轮，然后上报人类）
+ │
+ PASS?├── YES → Phase 6: Report │
+ └── NO → 回到 Generator 修复
+ （最多 2 轮，然后上报人类）
 ```
 
 ## 为什么这样设计？
@@ -65,11 +64,11 @@ User: "Build X"
 
 ```
 .harness/handoff/
-├── task.md              # 任务描述
-├── spec.md              # 产品规格
-├── implementation.md    # 实现说明
-├── review.md            # 代码审查
-└── sprint-N-brief.md    # Sprint 范围
+├── task.md # 任务描述
+├── spec.md # 产品规格
+├── implementation.md # 实现说明
+├── review.md # 代码审查
+└── sprint-N-brief.md # Sprint 范围
 ```
 
 ### 2. 智能复杂度路由
@@ -134,7 +133,6 @@ Anthropic 最重要的教训：
 3. **学习者** — 通过 Agent 生成的 spec 和 review 学习最佳实践
 
 ## 用途场景
-
 | 场景 | 命令 | 走哪些阶段 |
 |------|------|-----------|
 | 修 Bug | `/super-harness "Fix null check in auth.ts" --no-spec` | Code → Review |
@@ -144,14 +142,13 @@ Anthropic 最重要的教训：
 | 快速原型 | `/super-harness "Build a todo app" --no-review` | Spec → Code |
 
 ## Roadmap
-
 | 版本 | 特性 | 状态 |
 |------|------|------|
-| V1 | Spec → Code → Review 基础流水线 | ✅ 当前 |
-| V2 | 自动化测试 Agent（跑测试，不只看代码） | 🔧 计划中 |
-| V3 | Playwright UI 验收（前端任务） | 🔧 计划中 |
-| V4 | 动态 Agent 选择（根据任务类型选最合适的 Agent） | 💭 构想中 |
-| V5 | Sprint 合同机制（Generator 和 Evaluator 先协商完成标准） | 💭 构想中 |
+| V1 | Spec → Code → Review 基础流水线 | 当前 |
+| V2 | 自动化测试 Agent（跑测试，不只看代码） | 计划中 |
+| V3 | Playwright UI 验收（前端任务） | 计划中 |
+| V4 | 动态 Agent 选择（根据任务类型选最合适的 Agent） | 构想中 |
+| V5 | Sprint 合同机制（Generator 和 Evaluator 先协商完成标准） | 构想中 |
 
 ## 参考资料
 

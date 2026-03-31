@@ -1,4 +1,4 @@
-# 🔱 Super Harness — Design Document
+# Super Harness — Design Document
 
 ## Why Super Harness?
 
@@ -24,32 +24,31 @@ Inspired by Anthropic's GAN-style architecture (Generator + Evaluator adversaria
 
 ```
 User: "Build X"
-     │
-     ▼
+ │
+ ▼
 ┌─────────────────────┐
-│ Phase 1: Parse      │ ← Parse task, assess complexity
-│ Phase 2: Setup      │ ← Create .harness/handoff/ workspace
+│ Phase 1: Parse │ ← Parse task, assess complexity
+│ Phase 2: Setup │ ← Create .harness/handoff/ workspace
 └─────────┬───────────┘
-          ▼
+ ▼
 ┌─────────────────────┐
-│ Phase 3: Planner    │ ← Expand task into spec (complex tasks)
-│ 📋 spec.md          │   Skip (simple tasks)
+│ Phase 3: Planner │ ← Expand task into spec (complex tasks)
+│ spec.md │ Skip (simple tasks)
 └─────────┬───────────┘
-          ▼
+ ▼
 ┌─────────────────────┐
-│ Phase 4: Generator  │ ← Claude Code / Codex writes code
-│ 🐯 implementation.md│
+│ Phase 4: Generator │ ← Claude Code / Codex writes code
+│ implementation.md│
 └─────────┬───────────┘
-          ▼
+ ▼
 ┌─────────────────────┐
-│ Phase 5: Evaluator  │ ← Independent review, strict judgment
-│ 🔱 review.md        │
+│ Phase 5: Evaluator │ ← Independent review, strict judgment
+│ review.md │
 └─────────┬───────────┘
-          │
-     PASS?├── YES → Phase 6: Report ✅
-          │
-          └── NO → Back to Generator for fixes
-                   (max 2 rounds, then escalate to human)
+ │
+ PASS?├── YES → Phase 6: Report │
+ └── NO → Back to Generator for fixes
+ (max 2 rounds, then escalate to human)
 ```
 
 ## Design Decisions
@@ -65,11 +64,11 @@ User: "Build X"
 
 ```
 .harness/handoff/
-├── task.md              # Task description + metadata
-├── spec.md              # Product specification
-├── implementation.md    # Implementation notes
-├── review.md            # Code review verdict
-└── sprint-N-brief.md    # Sprint scope (multi-sprint only)
+├── task.md # Task description + metadata
+├── spec.md # Product specification
+├── implementation.md # Implementation notes
+├── review.md # Code review verdict
+└── sprint-N-brief.md # Sprint scope (multi-sprint only)
 ```
 
 ### 2. Smart Complexity Routing
@@ -134,7 +133,6 @@ Every phase can be skipped via flags (`--no-spec`, `--no-review`), making it str
 3. **Learners** — Learning best practices through agent-generated specs and reviews
 
 ## Use Cases
-
 | Scenario | Command | Phases |
 |----------|---------|--------|
 | Bug fix | `/super-harness "Fix null check in auth.ts" --no-spec` | Code → Review |
@@ -144,14 +142,13 @@ Every phase can be skipped via flags (`--no-spec`, `--no-review`), making it str
 | Rapid prototype | `/super-harness "Build a todo app" --no-review` | Spec → Code |
 
 ## Roadmap
-
 | Version | Feature | Status |
 |---------|---------|--------|
-| V1 | Spec → Code → Review base pipeline | ✅ Current |
-| V2 | Automated test agent (run tests, not just read code) | 🔧 Planned |
-| V3 | Playwright UI verification (frontend tasks) | 🔧 Planned |
-| V4 | Dynamic agent selection (best agent per task type) | 💭 Exploring |
-| V5 | Sprint contracts (Generator & Evaluator negotiate completion criteria before coding) | 💭 Exploring |
+| V1 | Spec → Code → Review base pipeline | Current |
+| V2 | Automated test agent (run tests, not just read code) | Planned |
+| V3 | Playwright UI verification (frontend tasks) | Planned |
+| V4 | Dynamic agent selection (best agent per task type) | Exploring |
+| V5 | Sprint contracts (Generator & Evaluator negotiate completion criteria before coding) | Exploring |
 
 ## References
 

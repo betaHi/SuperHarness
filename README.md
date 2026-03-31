@@ -1,275 +1,272 @@
 <div align="center">
 
-# 🔱 Super Harness
+# Super Harness
 
-### Multi-Agent Orchestration for Production Coding Workflows
+### An Engineering Paradigm for AI-Assisted Software Development
 
-**Turn a one-line task into production-ready code through coordinated AI agents.**
+**AI coding's next stage isn't better generation — it's better engineering systems.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-[Design Philosophy](#design-philosophy) · [How It Works](#how-it-works) · [Usage](#usage) · [Architecture](#architecture) · [Roadmap](#roadmap)
+[The Five Layers](#the-five-layers) · [Why This Matters](#why-this-matters) · [Patterns](#patterns) · [Reference Implementation](#reference-implementation) · [Roadmap](#roadmap)
 
 </div>
 
 ---
 
-## The Problem
+## What Is Super Harness?
 
-Single AI agents fail at complex coding tasks. Not sometimes — **predictably**.
+Super Harness is not a framework. Not a tool. Not a library.
 
-Anthropic's research quantified this: a solo agent spent $9 over 20 minutes and produced code with **broken core functionality**. The same task through a multi-agent harness cost $125 over 4 hours — but the output **actually worked**.
+It is **an engineering paradigm** — a reusable set of patterns, protocols, and practices for building reliable AI-assisted coding workflows.
 
-Why? Two fundamental failure modes:
+The core insight: the bottleneck in AI coding is no longer generation. Models can write code. The bottleneck is everything *around* the code — spec formation, task decomposition, environment design, quality assurance, and feedback loops.
 
-1. **Self-evaluation bias** — Agents confidently praise their own mediocre work. Anthropic observed this directly: *"agents tend to respond by confidently praising the work—even when, to a human observer, the quality is obviously mediocre."*
+> *"Building software still demands discipline, but the discipline shows up more in the scaffolding rather than the code."*
+> — OpenAI, Harness Engineering
 
-2. **Context degradation** — As context windows fill, agents rush to finish, skip edge cases, and stub implementations they promised to complete.
-
-**Super Harness solves both problems by separating roles: one agent plans, another builds, a third judges.**
-
----
-
-## Design Philosophy
-
-Super Harness is built on five principles distilled from Anthropic's harness engineering research and real-world production patterns:
-
-### 1. Separate the Doer from the Judge
-
-> The single most impactful architectural decision in agentic coding.
-
-A Generator that writes code should never evaluate its own output. An independent Evaluator with strict criteria catches what the Generator misses — stubbed features, broken edge cases, security oversights. This mirrors how human engineering teams work: developers don't merge their own PRs.
-
-### 2. Simplest Thing That Works
-
-> *"Find the simplest solution possible, and only increase complexity when needed."* — Anthropic, Building Effective Agents
-
-A bug fix doesn't need a 16-feature spec. Super Harness assesses task complexity upfront and routes accordingly:
-
-- **Simple** → Skip spec, write code, review
-- **Medium** → Generate spec, write code, review
-- **Complex** → Generate spec, decompose into sprints, write code, review each
-
-### 3. File-Based Communication
-
-Agents communicate through structured Markdown files in `.harness/handoff/`, not through conversation. This is deliberate:
-
-- **Traceable** — Every decision, every handoff is a file you can inspect
-- **Persistent** — Survives context resets, agent restarts, session timeouts
-- **Debuggable** — When something breaks, read the files to find where
-- **Auditable** — Full paper trail of what each agent decided and why
-
-### 4. Fail Fast, Escalate Early
-
-Max 2 review-fix cycles, then escalate to the human. Infinite retry loops burn money without convergence. If two rounds of feedback can't fix it, the problem likely exceeds the agent's capability — and the human's judgment is worth more than another $50 in tokens.
-
-### 5. Harness Evolves With Models
-
-> *"Every component in a harness encodes an assumption about what the model can't do on its own, and those assumptions are worth stress testing."* — Anthropic
-
-Today's essential scaffolding is tomorrow's dead weight. Anthropic proved this: Opus 4.5 needed sprint decomposition and context resets; Opus 4.6 didn't. Every phase in Super Harness can be toggled off via flags (`--no-spec`, `--no-review`), making it easy to strip away components as models improve.
+Super Harness codifies that scaffolding into a reproducible engineering paradigm that any team can adopt, adapt, and build upon.
 
 ---
 
-## How It Works
+## The Five Layers
+
+AI-assisted software development operates across five distinct layers. Most tools today optimize for one or two. Super Harness addresses all five as an integrated system.
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                     User: "Build X"                     │
-└──────────────────────────┬──────────────────────────────┘
-                           ▼
-              ┌────────────────────────┐
-              │   Phase 1: Parse &     │
-              │   Assess Complexity    │
-              │   (Simple/Medium/      │
-              │    Complex)            │
-              └───────────┬────────────┘
-                          ▼
-              ┌────────────────────────┐
-              │   Phase 2: Setup       │
-              │   .harness/handoff/    │
-              │   workspace            │
-              └───────────┬────────────┘
-                          ▼
-              ┌────────────────────────┐
-              │   Phase 3: Planner     │──── spec.md
-              │   (skip if simple)     │
-              └───────────┬────────────┘
-                          ▼
-              ┌────────────────────────┐
-              │   Phase 4: Generator   │──── code + implementation.md
-              │   (Claude Code/Codex)  │
-              └───────────┬────────────┘
-                          ▼
-              ┌────────────────────────┐
-         ┌───▶│   Phase 5: Evaluator   │──── review.md
-         │    │   (independent review) │
-         │    └───────────┬────────────┘
-         │           PASS?│
-         │        ┌───────┴───────┐
-         │        │               │
-         │       YES             NO
-         │        │               │
-         │        ▼               ▼
-         │   ┌─────────┐   ┌──────────┐
-         │   │ Phase 6  │   │ Fix Loop │
-         │   │ Report   │   │ (max 2x) │
-         │   └─────────┘   └────┬─────┘
-         │                      │
-         └──────────────────────┘
+┌─────────────────────────────────────────────────┐
+│ │
+│ Layer 5: Execution │
+│ Write code, run tests, debug, commit │
+│ │
+├─────────────────────────────────────────────────┤
+│ │
+│ Layer 4: Harness │
+│ Environment, tools, constraints, feedback │
+│ loops — everything the agent needs to work │
+│ reliably over time │
+│ │
+├─────────────────────────────────────────────────┤
+│ │
+│ Layer 3: Plan │
+│ Spec → task sequence, sprint decomposition, │
+│ dependency ordering │
+│ │
+├─────────────────────────────────────────────────┤
+│ │
+│ Layer 2: Spec │
+│ Intent → engineering input: requirements, │
+│ constraints, acceptance criteria │
+│ │
+├─────────────────────────────────────────────────┤
+│ │
+│ Layer 1: Intent │
+│ What the human actually wants to accomplish │
+│ │
+└─────────────────────────────────────────────────┘
 ```
 
-### The Handoff Protocol
+### Layer 1: Intent
 
-All inter-agent communication flows through structured files:
+The raw human need. Often ambiguous, incomplete, implicit.
 
-```
-.harness/handoff/
-├── task.md              # Original task + metadata + complexity assessment
-├── spec.md              # Product spec from Planner (what to build, not how)
-├── implementation.md    # Generator's notes (files changed, decisions, TODOs)
-├── review.md            # Evaluator's verdict (PASS/FAIL + specific issues)
-└── sprint-N-brief.md    # Per-sprint scope (multi-sprint only)
-```
+**The problem:** Most AI coding tools take a prompt and immediately jump to code. But a prompt is not a spec. *"Add authentication"* means entirely different things depending on context.
 
-Each file follows a strict schema so downstream agents can parse reliably. No ambiguity, no "I think the previous agent meant..."
+**The pattern:** Don't let agents start coding from raw intent. First, surface assumptions, clarify scope, and expose hidden constraints. Superpowers calls this *brainstorming* — *"it doesn't just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do."*
+
+### Layer 2: Spec
+
+The structured engineering input derived from intent.
+
+**The problem:** Without an explicit spec, agent decisions go undocumented, requirements stay fuzzy, and you can't tell if the output meets them. As Kiro puts it: *"You guided the agent throughout, but those decisions aren't documented. Requirements are fuzzy and you can't tell if the application meets them."*
+
+**The pattern:** Transform conversation into specification. Not a heavyweight document — a lightweight but explicit artifact that captures goals, constraints, boundaries, and acceptance criteria. The spec becomes the contract between human intent and agent execution.
+
+**Key principle:** Specs define *what* to build, not *how* to code it. Anthropic learned this directly: *"if the planner tried to specify granular technical details upfront and got something wrong, the errors in the spec would cascade into the downstream implementation."*
+
+### Layer 3: Plan
+
+The bridge from spec to executable tasks.
+
+**The problem:** A spec describes the destination. A plan describes the route. Without decomposition, agents attempt everything at once and lose coherence on complex tasks.
+
+**The pattern:** Break the spec into ordered, discrete tasks. Each task has clear scope, defined inputs, and testable completion criteria. For complex work, organize tasks into sprints with explicit handoff artifacts between phases.
+
+**Key principle:** Plan granularity should match task complexity. A bug fix needs no plan. A new module needs sprint decomposition. Over-planning simple tasks wastes resources; under-planning complex tasks causes drift.
+
+### Layer 4: Harness
+
+The engineering environment that enables agents to work reliably.
+
+**The problem:** An agent's effective world is limited to what it can access in context. *"From the agent's point of view, anything it can't access in-context while running effectively doesn't exist."* — OpenAI
+
+**The pattern:** Design the agent's working environment with the same rigor you'd design a production system:
+- **Knowledge:** Documentation as system of record, machine-readable, current
+- **Tools:** Integrated and accessible — linters, test runners, type checkers
+- **Constraints:** Architecture rules enforced mechanically, not by hope
+- **Feedback:** Automated verification loops — tests pass, types check, lints clean
+- **Legibility:** *"Agent legibility is the goal"* — the agent's state and decisions should be inspectable
+
+**Key principle:** For human engineers, implicit context fills many gaps. For agents, if it's not explicit, accessible, and verifiable, it doesn't exist.
+
+### Layer 5: Execution
+
+The actual coding, testing, debugging, and delivery.
+
+**The problem:** This is where most attention goes today, but it's the *least* differentiating layer. Models can already write code. The quality of that code depends almost entirely on the quality of Layers 1-4.
+
+**The pattern:** Separate roles. The builder should not judge its own work. Anthropic's research demonstrates this is the highest-leverage architectural decision: *"agents tend to respond by confidently praising the work — even when, to a human observer, the quality is obviously mediocre."* Independent evaluation catches what self-evaluation misses.
+
+**Key principle:** Execution quality is a *downstream* effect of spec clarity, plan coherence, and harness reliability. Fix the upstream layers, and execution improves automatically.
 
 ---
 
-## Usage
+## Why This Matters
 
-### Basic
+### The evolving ecosystem
+
+The AI coding community is converging on a shared realization: reliable AI-assisted development requires more than generation. Multiple projects and research efforts are exploring different parts of this space, each contributing valuable insights:
+| Project / Research | Primary Contribution | Layers Addressed |
+|--------------------|---------------------|------------------|
+| [Superpowers](https://github.com/obra/superpowers) | Pioneered brainstorming-first workflow and composable skills | Intent, Spec, Plan, Execution |
+| [Kiro](https://kiro.dev/) | Productized spec-driven development with structured requirements | Spec, Plan |
+| [MoAI-ADK](https://github.com/modu-ai/moai-adk) | High-performance harness with 24 agents and 52 skills | Harness, Execution |
+| [Harness Engineering](https://openai.com/index/harness-engineering/) (OpenAI) | Articulated environment design as engineering discipline | Harness |
+| [Harness Design](https://www.anthropic.com/engineering/harness-design-long-running-apps) (Anthropic) | Demonstrated multi-agent separation as highest-leverage intervention | Execution |
+| [OpenDev](https://arxiv.org/abs/2603.05344) | Academic analysis of scaffolding and context engineering | Harness, Execution |
+
+Each of these advances the field in meaningful ways. Super Harness builds on their collective insights by attempting to organize these ideas into a unified five-layer model — not as a replacement for any existing tool, but as a shared mental model and engineering methodology that can inform how teams think about and build AI-assisted development workflows.
+
+The five-layer model is one way to frame the problem. It draws heavily from the work above, and we encourage teams to explore the tools and ideas that best fit their needs.
+
+### The shared thesis
+
+A pattern is emerging across these projects and research efforts:
+
+> **The differentiator in AI coding is shifting from generation to the engineering system around it.**
+
+As generation commoditizes, the lasting value moves to spec formation, task decomposition, environment design, constraint enforcement, and feedback loops — Layers 2 through 4.
+
+This isn't a novel claim — it's a convergent observation. Superpowers, Kiro, OpenAI, and Anthropic are all independently arriving at the same conclusion from different angles. Super Harness attempts to synthesize these observations into a coherent, reusable framework.
+
+---
+
+## Patterns
+
+Super Harness defines reusable engineering patterns for each layer:
+
+### Pattern: Spec Formation
+Transform ambiguous intent into structured, verifiable requirements through guided elicitation.
+→ [`patterns/spec-formation.md`](patterns/spec-formation.md)
+
+### Pattern: Complexity-Based Routing
+Assess task complexity and route through the appropriate pipeline — not every task needs every layer.
+→ [`patterns/complexity-routing.md`](patterns/complexity-routing.md)
+
+### Pattern: File-Based Handoff Protocol
+Agents communicate through structured Markdown files, not conversation. Traceable, persistent, debuggable.
+→ [`patterns/file-based-handoff.md`](patterns/file-based-handoff.md)
+
+### Pattern: Independent Evaluation
+Separate the builder from the judge. The agent that writes code should never be the one that reviews it.
+→ [`patterns/independent-evaluation.md`](patterns/independent-evaluation.md)
+
+### Pattern: Review-Fix Loop with Escalation
+Maximum 2 automated fix cycles, then escalate to human judgment with full context.
+→ [`patterns/review-fix-loop.md`](patterns/review-fix-loop.md)
+
+### Pattern: Harness Evolution
+Every harness component encodes an assumption about model limitations. Re-examine and simplify as models improve.
+→ [`patterns/harness-evolution.md`](patterns/harness-evolution.md)
+
+---
+
+## Reference Implementation
+
+Super Harness includes a reference implementation as an agent skill:
 
 ```bash
-# Full pipeline: spec → code → review
+# Full five-layer pipeline
 /super-harness "Add JWT-based authentication with refresh tokens"
 
-# Simple fix: skip spec, go straight to code → review
-/super-harness "Fix the null pointer exception in auth.ts line 42" --no-spec
+# Skip spec for simple tasks (complexity routing)
+/super-harness "Fix the null pointer in auth.ts" --no-spec
 
-# Design only: generate spec without coding
+# Spec formation only
 /super-harness "Design a caching layer with Redis" --spec-only
 ```
 
-### Advanced
+The reference implementation demonstrates the patterns in practice, but **the patterns are the product, not the implementation**. Teams can implement Super Harness patterns in any orchestration platform — LangGraph, CrewAI, shell scripts, or custom tooling.
 
-```bash
-# Force multi-sprint for large tasks
-/super-harness "Refactor monolith payment module into microservice" --sprint multi
-
-# Skip review for rapid prototyping
-/super-harness "Build a quick prototype of the dashboard" --no-review
-
-# Custom retry limit
-/super-harness "Implement search with Elasticsearch" --max-retries 3
-
-# Target specific repo
-/super-harness "Add dark mode support" --repo /path/to/frontend
-
-# Use specific model for sub-agents
-/super-harness "Optimize database queries" --model claude-opus-4.6
-```
-
-### Options
-
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--repo` | cwd | Target repository path |
-| `--spec-only` | false | Generate spec only, don't code |
-| `--no-spec` | false | Skip spec generation |
-| `--no-review` | false | Skip code review |
-| `--max-retries` | 2 | Max review → fix cycles |
-| `--model` | agent default | Model for sub-agents |
-| `--sprint` | auto | `auto`, `single`, or `multi` |
+→ [`SKILL.md`](SKILL.md) — Full reference implementation
 
 ---
 
-## Architecture
-
-### Why These Roles?
-
-| Role | Purpose | Why It Exists |
-|------|---------|---------------|
-| **Planner** | Expand task → spec | Without a planner, agents under-scope. They start coding before understanding the full picture. |
-| **Generator** | Implement code | The core builder. Uses Claude Code, Codex, or other coding agents. |
-| **Evaluator** | Independent review | Agents can't judge their own work objectively. Separation is the key lever. |
-| **Orchestrator** | Route & coordinate | Decides complexity, manages retries, handles escalation. |
-
-### Complexity Routing
-
-Not every task needs the full pipeline. Over-orchestrating simple tasks wastes time and money.
+## Repository Structure
 
 ```
-"Fix typo in README"          → [Code] → [Review]           ~$1, 2min
-"Add user login"              → [Spec] → [Code] → [Review]  ~$15, 20min
-"Rebuild payment system"      → [Spec] → [Sprint×N] → [Review×N]  ~$80, 2hr
+SuperHarness/
+├── README.md # This document — the paradigm
+├── DESIGN.md # Design rationale (English)
+├── DESIGN.zh.md # Design rationale (Chinese)
+│
+├── patterns/ # Reusable engineering patterns
+│ ├── spec-formation.md
+│ ├── complexity-routing.md
+│ ├── file-based-handoff.md
+│ ├── independent-evaluation.md
+│ ├── review-fix-loop.md
+│ └── harness-evolution.md
+│
+├── protocols/ # Communication protocols
+│ └── handoff-schema.md # File-based handoff format spec
+│
+├── SKILL.md # Reference implementation (agent skill)
+├── CONTRIBUTING.md
+└── LICENSE
 ```
-
-### The Review-Fix Loop
-
-When the Evaluator fails a submission:
-
-```
-Round 1: Generator builds → Evaluator finds 3 issues (🔴×1, 🟡×2)
-Round 2: Generator fixes  → Evaluator finds 1 issue (🟡×1)
-Round 3: Generator fixes  → Evaluator: PASS ✅
-
-— OR —
-
-Round 1: Generator builds → Evaluator finds issues
-Round 2: Generator fixes  → Evaluator still finds issues
-→ ESCALATE to human (with full context attached)
-```
-
-The 2-round limit is intentional. Anthropic's data shows improvement plateaus after 2-3 iterations. Beyond that, you're burning tokens without convergence.
-
----
-
-## Requirements
-
-- At least one coding agent CLI:
-  - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (`claude` CLI) — recommended
-  - [Codex](https://github.com/openai/codex) (`codex` CLI)
-- Any agent orchestration platform that supports sub-agent spawning (e.g., [OpenClaw](https://github.com/openclaw/openclaw), or run standalone with shell scripts)
-- Git (for workspace setup and diff tracking)
 
 ---
 
 ## Roadmap
-
-| Version | Feature | Status |
-|---------|---------|--------|
-| **V1** | Spec → Code → Review pipeline with file-based handoff | ✅ Current |
-| **V2** | Automated test runner (execute tests, not just read code) | 🔧 Planned |
-| **V3** | Playwright-based UI verification for frontend tasks | 🔧 Planned |
-| **V4** | Dynamic agent selection (pick best agent per task type) | 💭 Exploring |
-| **V5** | Sprint contracts (Generator & Evaluator negotiate "done" criteria before coding) | 💭 Exploring |
+| Phase | Focus | Status |
+|-------|-------|--------|
+| **Phase 1** | Core patterns documented, reference implementation | Current |
+| **Phase 2** | Eval benchmark — test cases for evaluator calibration | Next |
+| **Phase 3** | Multiple reference implementations (LangGraph, shell scripts) | Planned |
+| **Phase 4** | Community-contributed patterns and case studies | Exploring |
+| **Phase 5** | Harness analytics — which layers are your bottleneck? | Exploring |
 
 ---
 
 ## Research Foundation
 
-Super Harness is grounded in published research and production engineering:
+Super Harness synthesizes insights from three converging lines of work:
 
-- **[Harness design for long-running application development](https://www.anthropic.com/engineering/harness-design-long-running-apps)** — Anthropic's three-agent architecture (Planner → Generator → Evaluator) and the finding that separating evaluation from generation is the highest-leverage intervention.
+**Spec-driven development:**
+- [Superpowers](https://github.com/obra/superpowers) — Brainstorming as spec formation; *"it doesn't just jump into trying to write code"*
+- [Kiro](https://kiro.dev/) — *"Tame complexity with spec-driven development, advanced steering, and custom agents"*
 
-- **[Building Effective Agents](https://www.anthropic.com/research/building-effective-agents)** — The principle of minimal complexity: *"find the simplest solution possible, and only increase complexity when needed."*
+**Harness engineering:**
+- [OpenAI: Harness Engineering](https://openai.com/index/harness-engineering/) — *"The team's primary job is no longer to write code, but to design environments, specify intent, and build feedback loops"*
+- [Anthropic: Quantifying infrastructure noise in evals](https://www.anthropic.com/engineering/infrastructure-noise) — Environment configuration swings benchmarks by percentage points
 
-- **[Claude Code Architecture](https://github.com/instructkr/claude-code)** — The `coordinator/`, `AgentTool`, and `TeamCreateTool` patterns from Claude Code's leaked source, demonstrating production-grade multi-agent orchestration via file-based communication.
-
-- **[Quantifying infrastructure noise in agentic coding evals](https://www.anthropic.com/engineering/infrastructure-noise)** — Evidence that environment configuration alone can swing benchmark results by several percentage points, reinforcing the need for controlled harness design.
+**Multi-agent architecture:**
+- [Anthropic: Harness design for long-running applications](https://www.anthropic.com/engineering/harness-design-long-running-apps) — Planner → Generator → Evaluator; independent evaluation as highest-leverage intervention
+- [Anthropic: Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) — *"Find the simplest solution possible, and only increase complexity when needed"*
+- [Claude Code Architecture](https://github.com/instructkr/claude-code) — Production patterns: coordinator, AgentTool, TeamCreateTool, file-based communication
 
 ---
 
 ## Contributing
 
-Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Areas where help is most needed:
-- Real-world testing across different project types
-- Evaluator prompt tuning for stricter/better reviews
-- Additional coding agent integrations
-- Sprint decomposition heuristics
+The highest-value contributions aren't code — they're **patterns**:
+- Document a pattern you've found effective in AI-assisted development
+- Share a case study of applying the five-layer model to a real project
+- Contribute a reference implementation for a different platform
+- Add test cases to the evaluator benchmark
 
 ---
 
@@ -281,8 +278,10 @@ MIT
 
 <div align="center">
 
-*Built for engineers who want AI agents that actually ship working code.*
+*AI coding's next stage isn't better generation — it's better engineering systems.*
 
-**[⭐ Star this repo](https://github.com/betaHi/SuperHarness)** if you find it useful.
+*Super Harness is one framework for thinking about and building them.*
+
+**[Star this repo](https://github.com/betaHi/SuperHarness)** if this framework helps you think about AI-assisted development.
 
 </div>
