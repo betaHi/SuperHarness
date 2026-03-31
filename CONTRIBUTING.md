@@ -22,7 +22,7 @@ Thanks for your interest in contributing! Here's how to get started.
 ## Development Setup
 
 1. Clone the repo
-2. Install OpenClaw
+2. Set up an agent orchestration platform (e.g., OpenClaw) or run phases manually
 3. Install a coding agent (Claude Code or Codex)
 4. Run `/super-harness` on a test project
 

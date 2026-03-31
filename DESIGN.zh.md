@@ -158,4 +158,4 @@ Anthropic 最重要的教训：
 - [Anthropic: Harness design for long-running application development](https://www.anthropic.com/engineering/harness-design-long-running-apps) — 三 Agent 架构的理论基础
 - [Anthropic: Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) — "find the simplest solution possible"
 - [Claude Code Source Architecture](https://github.com/instructkr/claude-code) — coordinator/, AgentTool, TeamCreateTool 的工程实现
-- [OpenClaw gh-issues Skill](https://github.com/openclaw/openclaw) — sub-agent 编排的实战参考
+- [OpenClaw gh-issues Skill](https://github.com/openclaw/openclaw) — sub-agent 编排模式的参考实现

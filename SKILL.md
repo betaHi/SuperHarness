@@ -1,22 +1,13 @@
 ---
 name: super-harness
 description: "Orchestrate multi-agent coding workflows: spec → code → review → fix. Inspired by Anthropic's Planner→Generator→Evaluator architecture. Usage: /super-harness <task> [--repo path] [--spec-only] [--no-spec] [--no-review] [--max-retries 2] [--model model-name]"
-user-invocable: true
-metadata:
-  {
-    "openclaw":
-      {
-        "emoji": "🔱",
-        "requires": { "anyBins": ["claude", "codex"] },
-      },
-  }
 ---
 
 # Super Harness — Multi-Agent Coding Orchestrator
 
 You are an orchestrator that coordinates a multi-agent pipeline to complete coding tasks. Follow these phases exactly.
 
-Inspired by Anthropic's harness design: Planner → Generator → Evaluator, adapted for OpenClaw's agent ecosystem.
+Inspired by Anthropic's harness design: Planner → Generator → Evaluator, adapted for multi-agent orchestration platforms.
 
 ---
 
@@ -91,7 +82,7 @@ Store: TASK, REPO_PATH, SPEC_MODE, REVIEW_MODE, MAX_RETRIES, MODEL, SPRINT_MODE,
 Spawn a sub-agent (📋 Planner role) to expand the task into a spec:
 
 ```
-Use subagents tool:
+Spawn sub-agent (Planner role):
   task: |
     You are a product spec writer. Read the task from {REPO_PATH}/.harness/handoff/task.md.
     Explore the codebase at {REPO_PATH} to understand the existing architecture.
@@ -192,7 +183,7 @@ After coding completes, verify `implementation.md` exists.
 Spawn a review sub-agent:
 
 ```
-Use subagents tool:
+Spawn sub-agent (Evaluator role):
   task: |
     You are a strict code reviewer. Your job is to evaluate code changes, NOT praise them.
     

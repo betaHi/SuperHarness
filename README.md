@@ -7,7 +7,6 @@
 **Turn a one-line task into production-ready code through coordinated AI agents.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Platform: OpenClaw](https://img.shields.io/badge/Platform-OpenClaw-blue)](https://github.com/openclaw/openclaw)
 
 [Design Philosophy](#design-philosophy) · [How It Works](#how-it-works) · [Usage](#usage) · [Architecture](#architecture) · [Roadmap](#roadmap)
 
@@ -228,10 +227,11 @@ The 2-round limit is intentional. Anthropic's data shows improvement plateaus af
 
 ## Requirements
 
-- [OpenClaw](https://github.com/openclaw/openclaw) — Agent platform
-- At least one coding agent:
+- At least one coding agent CLI:
   - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (`claude` CLI) — recommended
   - [Codex](https://github.com/openai/codex) (`codex` CLI)
+- Any agent orchestration platform that supports sub-agent spawning (e.g., [OpenClaw](https://github.com/openclaw/openclaw), or run standalone with shell scripts)
+- Git (for workspace setup and diff tracking)
 
 ---
 

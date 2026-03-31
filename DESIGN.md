@@ -158,4 +158,4 @@ Every phase can be skipped via flags (`--no-spec`, `--no-review`), making it str
 - [Anthropic: Harness design for long-running application development](https://www.anthropic.com/engineering/harness-design-long-running-apps) — Theoretical foundation for the three-agent architecture
 - [Anthropic: Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) — *"find the simplest solution possible"*
 - [Claude Code Source Architecture](https://github.com/instructkr/claude-code) — Production patterns from coordinator/, AgentTool, TeamCreateTool
-- [OpenClaw gh-issues Skill](https://github.com/openclaw/openclaw) — Sub-agent orchestration reference implementation
+- [OpenClaw gh-issues Skill](https://github.com/openclaw/openclaw) — Reference implementation for sub-agent orchestration patterns
