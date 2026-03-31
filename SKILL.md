@@ -1,6 +1,6 @@
 ---
 name: super-harness
-description: "Orchestrate multi-agent coding workflows: spec → code → review → fix. Inspired by Anthropic's Planner→Generator→Evaluator architecture. Usage: /super-harness <task> [--repo path] [--spec-only] [--no-spec] [--no-review] [--max-retries 2] [--model model-name]"
+description: "Production-grade multi-agent coding orchestrator. Separates planning, building, and reviewing into independent agents so complex tasks actually ship working code."
 ---
 
 # Super Harness — Multi-Agent Coding Orchestrator
