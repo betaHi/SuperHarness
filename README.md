@@ -48,15 +48,23 @@ Simple tasks skip the spec automatically. You stay in control at every step.
 ### More examples
 
 ```bash
-# Bug fix — skips spec, goes straight to code + review
+# Bug fix — auto-detects simplicity, skips spec
 /super-harness "Fix the null pointer in auth.ts line 42"
 
 # Just want a spec, no coding yet
 /super-harness "Design a caching layer with Redis" --spec-only
 
+# I already have a spec — start from build
+/super-harness --from build --spec docs/auth-spec.md
+
+# Code is already written — just review it
+/super-harness --from review
+
 # Skip review for quick prototyping
 /super-harness "Scaffold a basic Express API" --no-review
 ```
+
+Start from wherever you are. Not every task needs every layer.
 
 ### Requirements
 
@@ -92,6 +100,8 @@ This repo contains:
 ```
 
 Most tools optimize for Layer 5. The real leverage is in Layers 2-4.
+
+**Not every task needs every layer.** A bug fix enters at Layer 5. A greenfield project starts at Layer 1. The system detects where you are and starts from there — or you tell it explicitly with `--from`.
 
 ### Layer 1: Intent
 

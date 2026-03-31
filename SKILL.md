@@ -24,15 +24,36 @@ Parse the task from the user's input after `/super-harness`.
 /super-harness "Add JWT authentication"
 ```
 
-**Optional flags (advanced):**
+**Optional flags:**
 
 | Flag | Default | Description |
 |------|---------|-------------|
+| --from | auto | Entry point: `intent`, `spec`, `plan`, `build`, `review` |
 | --repo | cwd | Target repository |
 | --spec-only | false | Generate spec, stop before coding |
-| --no-spec | false | Skip spec |
-| --no-review | false | Skip review |
 | --yes | false | Auto-approve all checkpoints |
+
+**Entry points — start from where you are:**
+
+```bash
+# I have a vague idea (default — full pipeline)
+/super-harness "Something about user auth"
+
+# I already have a spec, just build it
+/super-harness --from build --spec path/to/my-spec.md
+
+# Code is written, just review it
+/super-harness --from review
+
+# I have a spec, need to break it into tasks
+/super-harness --from plan --spec path/to/my-spec.md
+```
+
+If `--from auto` (default), assess the situation:
+- User gave a vague description → start from Intent
+- User gave a detailed spec → start from Plan or Build
+- User said "review" or provided a diff → start from Review
+- User gave a clear, small task → start from Build
 
 Assess complexity automatically:
 - **Simple** (bug fix, small change): skip spec
